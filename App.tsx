@@ -117,6 +117,21 @@ export default function App() {
     await loadPeople();
   }
 
+  // DELETE: borra la persona de la base y vuelve a pedir la lista.
+  async function deletePerson(person: Person) {
+    const response = await fetch(`${API_URL}/api/personas/${person.id}`, {
+      method: 'DELETE',
+    });
+
+    if (!response.ok) {
+      Alert.alert('Error', 'No se pudo eliminar el enano');
+      return;
+    }
+
+    // Recargamos para que la tarjeta desaparezca de la FlatList.
+    await loadPeople();
+  }
+
   // -----------------------------------------------------------------------------
   // Interfaz: formulario + listado
   // -----------------------------------------------------------------------------
@@ -200,6 +215,10 @@ export default function App() {
                 {item.isWorking ? '[ RETIRAR DE LABORES ]' : '[ ASIGNAR A LABORES ]'}
               </Text>
             </TouchableOpacity>
+            {/* Este boton dispara el DELETE de la persona seleccionada. */}
+            <TouchableOpacity style={styles.deleteButton} onPress={() => deletePerson(item)}>
+              <Text style={styles.deleteButtonText}>[ ELIMINAR ENANO ]</Text>
+            </TouchableOpacity>
           </View>
         )}
       />
@@ -228,4 +247,6 @@ const styles = StyleSheet.create({
   personInfo: { marginTop: 5, color: '#bdb19a', fontFamily: 'monospace' },
   smallButton: { marginTop: 10, padding: 9, borderWidth: 1, borderColor: '#725b35', backgroundColor: '#302719' },
   smallButtonText: { color: '#d1b274', textAlign: 'center', fontFamily: 'monospace', fontSize: 12 },
+  deleteButton: { marginTop: 8, padding: 9, borderWidth: 1, borderColor: '#8b2e2e', backgroundColor: '#3a1a1a' },
+  deleteButtonText: { color: '#e07a7a', textAlign: 'center', fontFamily: 'monospace', fontSize: 12 },
 });
