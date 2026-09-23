@@ -20,6 +20,7 @@ interface Person {
   id: number;
   firstName: string;
   lastName: string;
+  age: number | null;
   arrivalDate: string | null;
   isWorking: boolean;
 }
@@ -39,6 +40,7 @@ export default function App() {
   // Estos estados representan los valores de los inputs del formulario.
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [age, setAge] = useState('');
   const [arrivalDate, setArrivalDate] = useState(today());
   const [isWorking, setIsWorking] = useState(false);
 
@@ -75,6 +77,7 @@ export default function App() {
       body: JSON.stringify({
         firstName: firstName.trim(),
         lastName: lastName.trim(),
+        age: age.trim() ? Number(age) : null,
         arrivalDate,
         isWorking,
       }),
@@ -88,6 +91,7 @@ export default function App() {
     // Dejamos el formulario listo para cargar otro registro.
     setFirstName('');
     setLastName('');
+    setAge('');
     setArrivalDate(today());
     setIsWorking(false);
 
@@ -123,7 +127,7 @@ export default function App() {
 
       <Text style={styles.logo}>
         {'+--------------------------+\n'}
-        {'|      DWARF FORTRESS     |\n'}
+        {'|      DWARF FORTRESS      |\n'}
         {'|       ASCII LEDGER       |\n'}
         {'+--------------------------+'}
       </Text>
@@ -145,6 +149,14 @@ export default function App() {
         placeholderTextColor="#8b806d"
         value={lastName}
         onChangeText={setLastName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Edad del enano"
+        placeholderTextColor="#8b806d"
+        value={age}
+        onChangeText={setAge}
+        keyboardType="numeric"
       />
       <TextInput
         style={styles.input}
@@ -172,6 +184,9 @@ export default function App() {
         renderItem={({ item }) => (
           <View style={styles.personCard}>
             <Text style={styles.personName}>+ {item.firstName} {item.lastName}</Text>
+            <Text style={styles.personInfo}>
+              | Edad: {item.age ?? 'sin dato'}
+            </Text>
             <Text style={styles.personInfo}>
               | Llegada: {item.arrivalDate?.slice(0, 10) ?? 'sin fecha'}
             </Text>
